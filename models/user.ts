@@ -11,17 +11,9 @@ const userSchema = new mongoose.Schema(
     }, {collection: "movies"}
 )
 
-const itemSchema = new mongoose.Schema(
-    {
-        id: Number,
-        itemName: String,
-        value: Number,
-        creatorId: Number
 
-    
-     })
 
 const User = mongoose.model("User", userSchema);
-const Item = mongoose.model("Item", itemSchema);
 
-export default {User, Item};
+
+export default User;
