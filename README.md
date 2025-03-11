@@ -3,9 +3,9 @@
 | Field | Type | Description |
 | ----------- | ----------- | ----------- |
 | id | Number | User ID |
-| email | string | User email adress |
-| name | string | User name |
-| password | string (hashed) | Password for user |
+| email | String | User email adress |
+| name | String | User name |
+| password | String (hashed) | Password for user |
 | money | Number | capital for user |
 | ownedItems | Number[] | user inventory items |
 | createAt | date | user created date |
@@ -15,9 +15,9 @@
 | Field | Type | Description |
 | ----------- | ----------- | ----------- |
 | id | Number | Item ID |
-| value | number | value of item in money |
-| rarity | number | chance to recieve item in lootbox |
-| creatorId | number | Owner ID |
+| value | Number | value of item in money |
+| rarity | Number | chance to recieve item in lootbox |
+| creatorId | Number | Owner ID |
 | createAt | date | Item created date |
 
 
