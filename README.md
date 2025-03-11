@@ -16,7 +16,8 @@
 | ----------- | ----------- | ----------- |
 | id | Number | Item ID |
 | value | number | value of item in money |
-| ownerId | number | Owner ID |
+| rarity | number | chance to recieve item in lootbox |
+| creatorId | number | Owner ID |
 | createAt | date | Item created date |
 
 
@@ -47,23 +48,26 @@
 ```json
 {
     "id": 1, 
-    "itemName": "SUPER MEGA",
+    "itemName": "Awesome name",
     "value": 100,
-    "ownerId": 1,
+    "rarity": 0.1, 
+    "creatorId": 1,
     "createAt": "2025-03-04T12:00:00Z"
 }
 ```
 # Assigning of HTTP methods
 
-| Method | Endpoint |Description|Access Control|
-| ----------- | ----------- | ----------- |----------- |
-| GET | api/items | fetch all items | |
-| GET | api/items/:id | fetch a single item |  |
-| POST | api/items | fetch a single item |  |
-| GET | api/profile | fetch data of current user |  |
-| POST | api/profile | create new user |  |
-| PUT | api/profile | update current user data |  |
-| DELETE | api/profile | delete current user |  |
+| Method | Endpoint |Description|
+| ----------- | ----------- | ----------- |
+| GET | api/items | fetch all items | 
+| GET | api/items/:id | fetch a single item |  
+| POST | api/items | fetch a single item |  
+| GET | api/profile | fetch data of current user |  
+| POST | api/profile | create new user |  
+| PUT | api/profile | update current user data |  
+| DELETE | api/profile | delete current user |  
+| GET | api/lootbox | recieve a random item based on rarity |  
+
 
 
 
