@@ -19,16 +19,16 @@ res.status(500).send(error);
 };
 
 const getUsers = async (req: Request, res: Response) => {
-  res.json(User);
-};
+    const user = await User.find({});
+  res.json(user);
+}
 // Paginate, search, sort och filter users. Titta på mongoose-example från torsdag lektion.
 
 //Create User
 const createUser = async (req: Request, res: Response) => {
     try{
         const user = await User.create(req.body);
-        await user.save();
-        res.status(201).send(user);
+        res.status(201).json({message:"User created"});
     } catch(error) {
         res.status(400).send(error);
     }
@@ -37,23 +37,24 @@ const createUser = async (req: Request, res: Response) => {
 //Update User
 const updateUser = async (req: Request, res: Response) => {
     try{
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, {new:true})
+        const user = await User.findByIdAndUpdate(req.params.id, req.body , {new: true});
         if(!user) {
             res.status(404).send();
             return
         }
-        res.send(user);
+        const updatedUser = await User.findById(req.params.id);
+        res.status(200).json({message:"User updated", updatedUser});
         } catch(error){
             res.status(400).send(error);
         }
-
 };
 //Delete User
 const deleteUser = async (req: Request, res: Response) => {
     try{
         const user = await User.findByIdAndDelete(req.params.id);
+        res.status(200).json({message:"User deleted"})
     if (!user) {
-        res.status(404).send();
+        res.status(404).json({message:"User not found"});
         return
     }
     } catch(error){

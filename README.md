@@ -15,6 +15,7 @@
 | Field | Type | Description |
 | ----------- | ----------- | ----------- |
 | id | Number | Item ID |
+| itemName | String | item name |
 | value | Number | value of item in money |
 | rarity | Number | chance to recieve item in lootbox |
 | creatorId | Number | Owner ID |
@@ -68,8 +69,8 @@
 | GET | api/profile/:id | fetch data of user by id |  
 | GET | api/profile/users    | fetch data of all users in the database |  
 | POST | api/profile | create new user |  
-| PUT | api/profile | update current user data |  
-| DELETE | api/profile | delete current user |  
+| PUT | api/profile/:id | update user data by id |  
+| DELETE | api/profile/:id | delete user by id |  
 
 
 

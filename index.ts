@@ -1,9 +1,14 @@
-import express, {Express, Request, Response} from "express";
+import express, { Express, Request, Response } from "express";
 import userRouter from "./routes/userRoutes";
+import dotenv from "dotenv";
 import cors from "cors";
-const app = express();
+import connectDB from "./db";
 
-const PORT = 3000;
+dotenv.config();
+const app: Express = express();
+
+const PORT = process.env.PORT || 3001;
+connectDB();
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello, World!");
