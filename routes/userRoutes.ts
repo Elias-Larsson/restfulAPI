@@ -1,15 +1,12 @@
-import {createUser, getUser, updateUser, deleteUser} from "../controllers/userController";
-import express ,{Express, Request, Response} from "express";
-const app: Express = express();
-app.use(express.json());
+import { getUsers, createUser, updateUser, deleteUser} from "../controllers/userController";
+import express ,{ Router, Express, Request, Response} from "express";
 
-const PORT = 3000;
+const userRouter = Router();
 
-app.get("/", (req: Request, res: Response) => {
-    res.send("Hello, World!");
-  });
+// userRouter.get("/api/profile/:id", getUser); 
+userRouter.get("/api/profile", getUsers);
+userRouter.post("/api/profile", createUser);
+userRouter.put("/api/profile", updateUser);
+userRouter.delete("/api/profile", deleteUser);
 
-app.get("/api/profile", getUser); 
-app.post("/api/profile", createUser);
-app.put("/api/profile", updateUser);
-app.delete("/api/profile", deleteUser);
+export default userRouter;

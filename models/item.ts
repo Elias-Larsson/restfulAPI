@@ -6,8 +6,8 @@ const itemSchema = new mongoose.Schema(
         itemName: String,
         value: Number,
         creatorId: Number
-
-    
      })
 
      const Item = mongoose.model("Item", itemSchema);
+
+     export default Item; 

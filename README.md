@@ -61,12 +61,16 @@
 | ----------- | ----------- | ----------- |
 | GET | api/items | fetch all items | 
 | GET | api/items/:id | fetch a single item |  
-| POST | api/items | fetch a single item |  
-| GET | api/profile | fetch data of current user |  
+| GET | api/items/lootbox | recieve a random item based on rarity |  
+| POST | api/items | fetch a single item |
+
+
+| GET | api/profile/:id | fetch data of user by id |  
+| GET | api/profile/users    | fetch data of all users in the database |  
 | POST | api/profile | create new user |  
 | PUT | api/profile | update current user data |  
 | DELETE | api/profile | delete current user |  
-| GET | api/lootbox | recieve a random item based on rarity |  
+
 
 
 
