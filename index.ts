@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import userRouter from "./routes/userRoutes";
+import itemRouter from "./routes/itemRoutes";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./db";
@@ -15,6 +16,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use(express.json());
+app.use(itemRouter);
 app.use(userRouter);
 app.use(cors({
   origin: "http://localhost:3000",

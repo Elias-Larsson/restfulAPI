@@ -63,7 +63,7 @@
 | GET | api/items | fetch all items | 
 | GET | api/items/:id | fetch a single item |  
 | GET | api/items/lootbox | recieve a random item based on rarity |  
-| POST | api/items | fetch a single item |
+| POST | api/items | create a single item |
 
 
 | GET | api/profile/:id | fetch data of user by id |  
