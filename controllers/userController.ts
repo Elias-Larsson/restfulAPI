@@ -1,11 +1,35 @@
 import {Request, Response} from "express";
 import User from "../models/user";
-import testUser from "../models/user";
+import bcrypt from "bcrypt";
+
+
 // titta error meddelanden
 // ta bort node_modules och lägg tillbaks
 
+const createUser = async (req: Request, res: Response) => {
+    try{
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+        console.log(salt);
+        console.log(hashedPassword);
+
+        const user = new User({
+            name: req.body.name,
+            email: req.body.email,
+            password: hashedPassword
+        });
+
+        await user.save();
+        res.status(201).json({message:"User created"});
+
+    } catch(error) {
+        res.status(400).json({message:"User not created"});
+    }
+};
+
 const getUser = async (req: Request, res: Response) => {
-try {
+    try {
 
 const user = await User.findById(req.params.id);
  if (!user) {
@@ -25,14 +49,6 @@ const getUsers = async (req: Request, res: Response) => {
 // Paginate, search, sort och filter users. Titta på mongoose-example från torsdag lektion.
 
 //Create User
-const createUser = async (req: Request, res: Response) => {
-    try{
-        const user = await User.create(req.body);
-        res.status(201).json({message:"User created"});
-    } catch(error) {
-        res.status(400).json({message:"User not created"});
-    }
-};
 
 //Update User
 const updateUser = async (req: Request, res: Response) => {
