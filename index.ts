@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(itemRouter);
 app.use(userRouter);
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "http://localhost:3000, https://restfulapi-aqov.onrender.com",
   methods: "GET, POST, PUT, DELETE",
 }));
 
