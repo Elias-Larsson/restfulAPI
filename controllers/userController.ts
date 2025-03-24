@@ -2,9 +2,6 @@ import { Request, Response } from "express";
 import User from "../models/user";
 import bcrypt from "bcrypt";
 
-// titta error meddelanden
-// ta bort node_modules och lägg tillbaks
-
 const createUser = async (req: Request, res: Response) => {
   try {
     const salt = await bcrypt.genSalt();
@@ -43,7 +40,6 @@ const getUsers = async (req: Request, res: Response) => {
   const user = await User.find({});
   res.json(user);
 };
-// Paginate, search, sort och filter users. Titta på mongoose-example från torsdag lektion.
 
 //Create User
 

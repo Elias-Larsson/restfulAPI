@@ -72,6 +72,13 @@
 | PUT | api/profile/:id | update user data by id |  
 | DELETE | api/profile/:id | delete user by id |  
 
+# NTS
+1. auth tokens till alla routes X
+2. titta igenom och förstå kod /
+4. deploy 
+5. ändra status error på allt
+3. skriv cURL
+6. extra features?
 
 
 
