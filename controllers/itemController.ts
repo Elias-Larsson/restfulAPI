@@ -7,6 +7,10 @@ const createItem = async (req: Request, res: Response) => {
   try {
 
     const item = await Item.create(req.body);
+   if (!item.itemName || item.value || item.creatorId || item.rarity) {
+        res.status(400).json({ message: "missing itemName, value, creatorId, or rarity" });
+        return
+   }
     await item.save();
     
     res.status(201).json({ message: "Item created" });
@@ -24,13 +28,18 @@ const getItem = async (req: Request, res: Response) => {
     }
     res.json(item);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json({ message: "Error getting item" });
   }
 };
 
 const getItems = async (req: Request, res: Response) => {
-  const item = await Item.find({});
-  res.json(item);
+    try {
+        const item = await Item.find({});
+        res.json(item);
+
+    } catch(error) {
+    res.status(500).json({ message: "Error getting items" });
+    }
 };
 
 const lootbox = async (req: UserRequest, res: Response) => {

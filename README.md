@@ -74,11 +74,11 @@
 
 # NTS
 1. auth tokens till alla routes X
-2. titta igenom och förstå kod /
-4. deploy 
-5. ändra status error på allt
-3. skriv cURL
-6. extra features?
+2. titta igenom och förstå kod X
+4. deploy /
+5. ändra status error på allt /
+3. skriv cURL 
+6. extra features? /
 
 
 

@@ -4,6 +4,15 @@ import bcrypt from "bcrypt";
 
 const createUser = async (req: Request, res: Response) => {
   try {
+    if (!req.body.password || !req.body.email || !req.body.name) {
+      res.status(400).json({ message: "missing email, name or password" });
+      return;
+    }
+    if (req.body.password.length < 6) {
+      res.status(400).json({ message: "password must be at least 6 characters" });
+      return;
+    }
+
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
@@ -16,6 +25,14 @@ const createUser = async (req: Request, res: Response) => {
       password: hashedPassword,
     });
 
+    if (!user.name || !user.email || !user.password) {
+      res.status(400).json({ message: "missing email, name or password" });
+      return;
+    }
+    if (req.body.password.length < 6) {
+      res.status(400).json({ message: "password must be at least 6 characters" });
+      return;
+    }
     await user.save();
     res.status(201).json({ message: "User created" });
   } catch (error) {
@@ -37,20 +54,26 @@ const getUser = async (req: Request, res: Response) => {
 };
 
 const getUsers = async (req: Request, res: Response) => {
-  const user = await User.find({});
-  res.json(user);
+  try {
+    const user = await User.find({});
+    if(!user){
+      res.status(404).json({message: "No users found"});
+      return;
+    }
+    res.json(user);
+    
+  } catch(error){
+    res.status(500).send(error);
+  }
 };
 
-//Create User
-
-//Update User
 const updateUser = async (req: Request, res: Response) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
     if (!user) {
-      res.status(404).send();
+      res.status(404).json({ message: "User not found" });
       return;
     }
     const updatedUser = await User.findById(req.params.id);
