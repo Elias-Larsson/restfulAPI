@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import userRouter from "./routes/userRoutes";
 import itemRouter from "./routes/itemRoutes";
+import tradeRouter from "./routes/tradeRoutes";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./db";
@@ -21,6 +22,7 @@ app.get("/", (req: UserRequest, res: Response) => {
 app.use(express.json());
 app.use(itemRouter);
 app.use(userRouter);
+app.use(tradeRouter);
 app.use(
   cors({
     origin: "https://restfulapi-aqov.onrender.com, http://localhost:3000",

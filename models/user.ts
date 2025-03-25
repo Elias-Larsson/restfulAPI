@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     money: { type: Number, default: 500, required: true },
     ownedItems: { type: [{ type: Schema.Types.ObjectId }], default: [] },
+    
   },
   {
     collection: "users",
