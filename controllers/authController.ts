@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 const login = async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ email: req.body.email });
+
     if (!user) {
       res.status(404).json("User not found");
       return;
@@ -17,9 +18,11 @@ const login = async (req: Request, res: Response) => {
     }
 
     const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET!);
+
     res.json({ accessToken: accessToken });
   } catch (error) {
     console.log(error);
+
     res.status(500).json("Error logging in");
   }
 };

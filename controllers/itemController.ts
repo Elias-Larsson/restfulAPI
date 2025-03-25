@@ -3,18 +3,46 @@ import Item from "../models/item";
 import User from "../models/user";
 import { UserRequest } from "../types";
 import { Types } from "mongoose";
-const createItem = async (req: Request, res: Response) => {
-  try {
 
-    const item = await Item.create(req.body);
-   if (!item.itemName || item.value || item.creatorId || item.rarity) {
-        res.status(400).json({ message: "missing itemName, value, creatorId, or rarity" });
-        return
-   }
-    await item.save();
-    
-    res.status(201).json({ message: "Item created" });
+const createItem = async (req: UserRequest, res: Response) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      res
+        .status(401)
+        .json({ message: "You must be logged in to create an item" });
+      return;
+    }
+
+    const { itemName, value, rarity } = req.body;
+
+    if (!itemName || !value || !rarity) {
+      res.status(400).json({ message: "Missing itemName, value, or rarity" });
+      return;
+    }
+
+    const updatedMoney = user.money - value;
+
+    if (updatedMoney < 0) {
+      res.status(400).json({ message: "Not enough money" });
+      return;
+    }
+
+    const item = await Item.create({
+      itemName,
+      value,
+      rarity,
+      creatorId: user._id,
+    });
+
+    user.money = updatedMoney;
+
+    await user.save();
+
+    res.status(201).json({ message: "Item created", item });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ message: "Item not created" });
   }
 };
@@ -22,10 +50,12 @@ const createItem = async (req: Request, res: Response) => {
 const getItem = async (req: Request, res: Response) => {
   try {
     const item = await Item.findById(req.params.id);
+
     if (!item) {
       res.status(404).json({ message: "Item not found" });
       return;
     }
+
     res.json(item);
   } catch (error) {
     res.status(500).json({ message: "Error getting item" });
@@ -33,56 +63,65 @@ const getItem = async (req: Request, res: Response) => {
 };
 
 const getItems = async (req: Request, res: Response) => {
-    try {
-        const item = await Item.find({});
-        res.json(item);
+  try {
+    const item = await Item.find({});
 
-    } catch(error) {
+    res.json(item);
+  } catch (error) {
     res.status(500).json({ message: "Error getting items" });
-    }
+  }
 };
 
 const lootbox = async (req: UserRequest, res: Response) => {
   try {
-    // Fetch all items
-    const items = await Item.find({});
-    if (items.length === 0) {
-      return res.status(404).json({ message: "No items available" });
-    }
-
-    // Fetch user
     const user = await User.findById(req.user._id);
+
     if (!user) {
-      return res.status(401).json({ message: "You must be logged in to open a loot box" });
+        res
+        .status(401)
+        .json({ message: "You must be logged in to open a loot box" });
+        return;
     }
 
-    await user.save();
+    const items = await Item.find({});
 
-    const availableItems = items.filter(item => !user.ownedItems.includes(item._id));
-    console.log("item ids:", user.ownedItems);
-    console.log("Available Items:", availableItems);
-    console.log("All Items:", items);
+    if (items.length === 0) {
+      res.status(403).json({ message: "No items available" });
+      return;
+    }
+
+    const availableItems = items.filter(
+      (item) => !user.ownedItems.includes(item._id)
+    );
+
     if (availableItems.length === 0) {
-      return res.status(404).json({ message: "You already own all items" });
+        res.status(403).json({ message: "You already own all items" });
+        return;
     }
 
     // Find a random item that the user doesn't already own
-    const randomItem = availableItems[Math.floor(Math.random() * availableItems.length)];
+    const randomItem =
+      availableItems[Math.floor(Math.random() * availableItems.length)];
+
     // add the item to the users owned items
-    const objectId = new Types.ObjectId(randomItem._id);
-    user.ownedItems.push(objectId);
+    const randomItemId = new Types.ObjectId(randomItem._id);
+    if (user.money -100 < 0) {
+        res.status(403).json({message: "You don't have enough money"})
+        return;
+    }
+    
+    user.money -= 100;
+    user.ownedItems.push(randomItemId);
+
     await user.save();
 
     res.json({
       message: "🎁 You opened the loot box and got an item!",
       item: randomItem,
     });
-
   } catch (error) {
-    console.error("Lootbox error:", error);
     res.status(500).json({ message: "Error opening loot box" });
   }
 };
-
 
 export { createItem, getItem, getItems, lootbox };

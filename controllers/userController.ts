@@ -4,15 +4,6 @@ import bcrypt from "bcrypt";
 
 const createUser = async (req: Request, res: Response) => {
   try {
-    if (!req.body.password || !req.body.email || !req.body.name) {
-      res.status(400).json({ message: "missing email, name or password" });
-      return;
-    }
-    if (req.body.password.length < 6) {
-      res.status(400).json({ message: "password must be at least 6 characters" });
-      return;
-    }
-
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
@@ -30,7 +21,9 @@ const createUser = async (req: Request, res: Response) => {
       return;
     }
     if (req.body.password.length < 6) {
-      res.status(400).json({ message: "password must be at least 6 characters" });
+      res
+        .status(400)
+        .json({ message: "password must be at least 6 characters" });
       return;
     }
     await user.save();
@@ -56,13 +49,12 @@ const getUser = async (req: Request, res: Response) => {
 const getUsers = async (req: Request, res: Response) => {
   try {
     const user = await User.find({});
-    if(!user){
-      res.status(404).json({message: "No users found"});
+    if (!user) {
+      res.status(404).json({ message: "No users found" });
       return;
     }
     res.json(user);
-    
-  } catch(error){
+  } catch (error) {
     res.status(500).send(error);
   }
 };
