@@ -8,6 +8,7 @@ const MONGO_URI_PROD = process.env.MONGO_URI_PROD as string;
 
 const connectDB = async () => {
     const MONGO_URI = process.env.MONGO_URI_PROD || "";
+    console.log("testing URI", MONGO_URI)
     try {
         await mongoose.connect(MONGO_URI);
         console.log("Ansluten till MongoDB");
