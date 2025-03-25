@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/user";
 import bcrypt from "bcrypt";
-
+import { UserRequest } from "../types";
 const createUser = async (req: Request, res: Response) => {
   try {
     const salt = await bcrypt.genSalt();
@@ -59,34 +59,51 @@ const getUsers = async (req: Request, res: Response) => {
   }
 };
 
-const updateUser = async (req: Request, res: Response) => {
+const updateUser = async (req: UserRequest, res: Response) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    const allowedUpdates = ["name", "email", "password"];
+
+    const updates = Object.keys(req.body);
+
+    const isValidOperation = updates.every((key) => allowedUpdates.includes(key));
+
+    if (!isValidOperation) {
+      console.log(updates)
+      res.status(400).json({ message: "Invalid updates in request body" });
+      return;
+    }
+    
+    const user = await User.findByIdAndUpdate(req.user._id, req.body, {
       new: true,
     });
+
+
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
-    const updatedUser = await User.findById(req.params.id);
+
+    const updatedUser = await User.findById(req.user._id);
+
     res.status(200).json({ message: "User updated", updatedUser });
   } catch (error) {
     res.status(400).send(error);
   }
 };
-//Delete User
+
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: "User deleted" });
+    
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
+
+    res.status(200).json({ message: "User deleted" });
   } catch (error) {
     res.status(500).send(error);
     return;
   }
 };
-
 export { getUser, getUsers, createUser, updateUser, deleteUser };

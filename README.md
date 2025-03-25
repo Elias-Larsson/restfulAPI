@@ -7,7 +7,7 @@
 | name | String | User name |
 | password | String (hashed) | Password for user |
 | money | Number | capital for user |
-| ownedItems | Number[] | user inventory items |
+| ownedItems | ObjectId[] | user owned items in inventory |
 | createAt | date | user created date |
 | updateAt | date | Item updated date |
 
@@ -18,8 +18,9 @@
 | itemName | String | item name |
 | value | Number | value of item in money |
 | rarity | Number | chance to recieve item in lootbox |
-| creatorId | Number | Owner ID |
+| creatorId | ObjectId | user who created the item|
 | createAt | date | Item created date |
+| updateAt | date | Item updated date |
 
 
 ---
@@ -27,7 +28,7 @@
 | Resource | URI | Description |
 | ----------- | ----------- | ----------- |
 | Users | /api/profile | Manage logged in user |
-| Items | /api/profile/inventory | Manage all items user owns |
+| Items | /api/items | Manage all items user owns |
 
 
 
@@ -35,12 +36,15 @@
 ## Users
 ```json
 {
-    "id": 1, 
-    "email": "Elias@Lasse.com",
+    "id": 67db9a712kda52e0adc1135f, 
+    "email": "Elias@larsson.com",
     "name": "Elias",
-    "password": "GoodPassword1" ,
+    "password": "PasswordsPass" ,
     "money": 200,
-    "ownedItems": [1, 7, 32],
+    "ownedItems": [
+        67d9912d05h222d109f380f2,
+        67dae6aee07d179305ab2752
+        ],
     "createAt": "2025-03-04T12:00:00Z",
     "updateAt": "2025-03-04T12:00:00Z"
 }
@@ -62,7 +66,7 @@
 | ----------- | ----------- | ----------- |
 | GET | api/items | fetch all items | 
 | GET | api/items/:id | fetch a single item |  
-| GET | api/items/lootbox | recieve a random item based on rarity |  
+| GET | api/items/lootbox | recieve a random item |  
 | POST | api/items | create a single item |
 
 
@@ -75,11 +79,14 @@
 # NTS
 1. auth tokens till alla routes X
 2. titta igenom och förstå kod X
-4. deploy /
-5. ändra status error på allt /
-3. skriv cURL 
-6. extra features? /
+3. deploy x
 
+imorn
+4. ändra status error på allt /
+5. skriv cURL
 
+idag
+6. skriv update och delete på user
+7. skriv README
 
 

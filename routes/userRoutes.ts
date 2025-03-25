@@ -13,7 +13,7 @@ const userRouter = Router();
 userRouter.get("/api/profile", getUsers);
 userRouter.get("/api/profile/:id", getUser);
 userRouter.post("/api/profile", createUser);
-userRouter.put("/api/profile/:id", authenticateToken, updateUser);
+userRouter.put("/api/profile", authenticateToken, updateUser);
 userRouter.delete("/api/profile/:id", authenticateToken, deleteUser);
 
 export default userRouter;
