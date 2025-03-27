@@ -29,7 +29,7 @@ const createUser = async (req: Request, res: Response) => {
     await user.save();
     res.status(201).json({ message: "User created" });
   } catch (error) {
-    res.status(400).json({ message: "User not created" });
+    res.status(500).json({ message: "User not created" });
   }
 };
 
@@ -64,12 +64,13 @@ const updateUser = async (req: UserRequest, res: Response) => {
     const allowedUpdates = ["name", "email", "password"];
 
     const updates = Object.keys(req.body);
+    console.log(updates);
 
     const isValidOperation = updates.every((key) => allowedUpdates.includes(key));
 
     if (!isValidOperation) {
       console.log(updates)
-      res.status(400).json({ message: "Invalid updates in request body" });
+      res.status(400).json({ message: "User is only allowed to update name, email and password" });
       return;
     }
     
@@ -79,7 +80,7 @@ const updateUser = async (req: UserRequest, res: Response) => {
 
 
     if (!user) {
-      res.status(404).json({ message: "User not found" });
+      res.status(404).json({ message: "You must be logged in to update user information" });
       return;
     }
 
@@ -87,16 +88,16 @@ const updateUser = async (req: UserRequest, res: Response) => {
 
     res.status(200).json({ message: "User updated", updatedUser });
   } catch (error) {
-    res.status(400).send(error);
+    res.status(500).send(error);
   }
 };
 
-const deleteUser = async (req: Request, res: Response) => {
+const deleteUser = async (req: UserRequest, res: Response) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
+    const user = await User.findByIdAndDelete(req.user._id);
     
     if (!user) {
-      res.status(404).json({ message: "User not found" });
+      res.status(404).json({ message: "You must be logged in to delete current user" });
       return;
     }
 

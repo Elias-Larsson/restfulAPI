@@ -43,7 +43,7 @@ const createItem = async (req: UserRequest, res: Response) => {
     res.status(201).json({ message: "Item created", item });
   } catch (error) {
     console.log(error);
-    res.status(400).json({ message: "Item not created" });
+    res.status(500).json({ message: "Item not created" });
   }
 };
 
@@ -65,6 +65,11 @@ const getItem = async (req: Request, res: Response) => {
 const getItems = async (req: Request, res: Response) => {
   try {
     const item = await Item.find({});
+
+    if (!item) {
+      res.status(404).json({ message: "no items not found" });
+      return;
+    }
 
     res.json(item);
   } catch (error) {
@@ -95,7 +100,7 @@ const lootbox = async (req: UserRequest, res: Response) => {
     );
 
     if (availableItems.length === 0) {
-        res.status(403).json({ message: "You already own all items" });
+        res.status(400).json({ message: "You already own all items" });
         return;
     }
 
@@ -106,7 +111,7 @@ const lootbox = async (req: UserRequest, res: Response) => {
     // add the item to the users owned items
     const randomItemId = new Types.ObjectId(randomItem._id);
     if (user.money -100 < 0) {
-        res.status(403).json({message: "You don't have enough money"})
+        res.status(200).json({message: "You don't have enough money"})
         return;
     }
     

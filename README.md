@@ -73,8 +73,8 @@
 | GET | api/profile/:id | fetch data of user by id |  
 | GET | api/profile/users    | fetch data of all users in the database |  
 | POST | api/profile | create new user |  
-| PUT | api/profile/:id | update user data by id |  
-| DELETE | api/profile/:id | delete user by id |  
+| PUT | api/profile | update current logged in users data by auth token |  
+| DELETE | api/profile | delete current logged in user by auth token  |  
 
 # NTS
 1. auth tokens till alla routes X
