@@ -6,6 +6,11 @@ import { Types } from "mongoose";
 
 const createItem = async (req: UserRequest, res: Response) => {
   try {
+    if (!req.user) {
+      res.status(404).json({ message: "Could not find user" });
+      return;
+    }
+    
     const user = await User.findById(req.user._id);
 
     if (!user) {
@@ -79,6 +84,11 @@ const getItems = async (req: Request, res: Response) => {
 
 const lootbox = async (req: UserRequest, res: Response) => {
   try {
+    if (!req.user) {
+      res.status(404).json({ message: "Could not find user" });
+      return;
+    }
+
     const user = await User.findById(req.user._id);
 
     if (!user) {

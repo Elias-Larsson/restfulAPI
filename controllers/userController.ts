@@ -7,9 +7,6 @@ const createUser = async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-    console.log(salt);
-    console.log(hashedPassword);
-
     const user = new User({
       name: req.body.name,
       email: req.body.email,
@@ -53,14 +50,41 @@ const getUsers = async (req: Request, res: Response) => {
       res.status(404).json({ message: "No users found" });
       return;
     }
+    console.log(typeof user);
+
     res.json(user);
   } catch (error) {
     res.status(500).send(error);
   }
 };
 
+const filterUsers = async (req: Request, res: Response) => {
+  try {
+    const { startingLetter } = req.query;
+
+    if (!startingLetter || typeof startingLetter !== "string") {
+      return res.status(400).json({ message: "Missing starting letter or invalid starting letter" });
+    }
+
+    const regex = new RegExp(`^${startingLetter}`, 'i');
+
+    const user = await User.find({ name: regex });
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error filtering users:", error);
+    res.status(500).json({ message: "" });
+  }
+};
+
+
 const updateUser = async (req: UserRequest, res: Response) => {
   try {
+    if (!req.user) {
+      res.status(404).json({ message: "Could not find user" });
+      return;
+    }
+    
     const allowedUpdates = ["name", "email", "password"];
 
     const updates = Object.keys(req.body);
@@ -94,6 +118,12 @@ const updateUser = async (req: UserRequest, res: Response) => {
 
 const deleteUser = async (req: UserRequest, res: Response) => {
   try {
+
+    if (!req.user) {
+      res.status(404).json({ message: "Could not find user" });
+      return;
+    }
+    
     const user = await User.findByIdAndDelete(req.user._id);
     
     if (!user) {

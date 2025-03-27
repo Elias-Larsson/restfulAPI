@@ -1,4 +1,5 @@
 # Object modeling
+The application has full CRUD functionality for users. Users can create and add a random item to their ownedItems.  
 ## Users model
 | Field | Type | Description |
 | ----------- | ----------- | ----------- |
@@ -68,25 +69,30 @@
 | GET | api/items/:id | fetch a single item |  
 | GET | api/items/lootbox | recieve a random item |  
 | POST | api/items | create a single item |
-
-
 | GET | api/profile/:id | fetch data of user by id |  
 | GET | api/profile/users    | fetch data of all users in the database |  
 | POST | api/profile | create new user |  
 | PUT | api/profile | update current logged in users data by auth token |  
 | DELETE | api/profile | delete current logged in user by auth token  |  
 
-# NTS
-1. auth tokens till alla routes X
-2. titta igenom och förstå kod X
-3. deploy x
+## API cURL documentation
 
-imorn
-4. ändra status error på allt /
-5. skriv cURL
-
-idag
-6. skriv update och delete på user
-7. skriv README
-
-
+Create a new user
+curl -X POST "https://restfulapi-aqov.onrender.com/api/profile" \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Elias", "password": "mypassword2025", "email": "elias@larsson.com"}'
+log in
+curl -X POST http://localhost:8080/api/login \
+     -H "Content-Type: application/json" \
+     -d '{"username": "Elias", "password": "mypassword2025" }'
+Get user
+curl -X GET "https://restfulapi-aqov.onrender.com/api/67e11bc35a26e1b4c64bd9e1" \
+     -H "Authorization: Bearer <Your_Access_Token>"
+Delete user
+usercurl -X DELETE "https://restfulapi-aqov.onrender.com/api/profile" \
+     -H "Authorization: Bearer <Your_Access_Token>"
+Update user
+curl -X PUT "https://restfulapi-aqov.onrender.com/api/profile" \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer <Your_Access_Token>" \
+     -d '{"username":"testuser1"}'
