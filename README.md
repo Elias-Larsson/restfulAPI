@@ -86,7 +86,11 @@ imorn
 5. skriv cURL
 
 idag
-6. skriv update och delete på user
+6. skriv update och delte på user
 7. skriv README
+
+trade 
+- trade model: implementera user grejer
+- trade controller: lycka till 
 
 

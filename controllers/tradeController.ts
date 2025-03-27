@@ -6,19 +6,18 @@ import { Types } from "mongoose";
 import tradeRequest from "../models/tradeRequest";
 
 const userTradeRequest = async (req: UserRequest, res: Response) => {
-     try {
-        const item = await Item.findById(req.params.id);
-    
-        if (!item) {
-          res.status(404).json({ message: "Item not found" });
-          return;
-        }
-    
-        res.json(item);
-      } catch (error) {
-        res.status(500).json({ message: "Error getting item" });
-      }
+  try {
+    const trade = new tradeRequest({
+      requestItems: req.body.requestItems,
+      giveItems: req.body.giveItems,
+    });
 
-}
+    if (!trade || !trade.giveItems || !trade.requestItems) {
+        res.status(400).json({message: "missing trade items"})
+    }
 
-export {userTradeRequest}
+    await trade.save();
+  } catch (error) {}
+};
+
+export { userTradeRequest };
