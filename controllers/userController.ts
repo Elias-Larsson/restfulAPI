@@ -63,17 +63,18 @@ const filterUsers = async (req: Request, res: Response) => {
     const { startingLetter } = req.query;
 
     if (!startingLetter || typeof startingLetter !== "string") {
-      return res.status(400).json({ message: "Missing starting letter or invalid starting letter" });
+      res.status(400).json({ message: "Missing starting letter or invalid starting letter" });
+      return;
     }
 
-    const regex = new RegExp(`^${startingLetter}`, 'i');
+    const regexLetter = new RegExp(`^${startingLetter}`, 'i');
 
-    const user = await User.find({ name: regex });
+    const users = await User.find({ name: regexLetter });
 
-    res.status(200).json(user);
+    res.status(200).json(users);
   } catch (error) {
-    console.error("Error filtering users:", error);
-    res.status(500).json({ message: "" });
+    res.status(500).send(error);
+    return;
   }
 };
 
@@ -84,7 +85,7 @@ const updateUser = async (req: UserRequest, res: Response) => {
       res.status(404).json({ message: "Could not find user" });
       return;
     }
-    
+
     const allowedUpdates = ["name", "email", "password"];
 
     const updates = Object.keys(req.body);
@@ -137,4 +138,4 @@ const deleteUser = async (req: UserRequest, res: Response) => {
     return;
   }
 };
-export { getUser, getUsers, createUser, updateUser, deleteUser };
+export { getUser, getUsers, createUser, updateUser, deleteUser, filterUsers };

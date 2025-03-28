@@ -1,5 +1,27 @@
+# lootbox API
+The application has full CRUD functionality for users. Users can create and add a random item to their ownedItems. Eventually there will be a trading system between users.
+## How to setup the application
+1. Clone the repo: 
+``` 
+git clone <repository-url>
+cd restfulAPI 
+```
+2. install all dependencies:
+```
+npm install
+```
+3. create a .env file with the following code:
+```
+PORT=3000
+ACCESS_TOKEN_SECRET=<your_secret_key>
+MONGO_URI_LOCAL=<your_local_mongo_uri>
+MONGO_URI_PROD=<your_production_mongo_uri>
+```
+5. start the application:
+``` 
+npm run dev
+```
 # Object modeling
-The application has full CRUD functionality for users. Users can create and add a random item to their ownedItems.  
 ## Users model
 | Field | Type | Description |
 | ----------- | ----------- | ----------- |
@@ -71,28 +93,51 @@ The application has full CRUD functionality for users. Users can create and add 
 | POST | api/items | create a single item |
 | GET | api/profile/:id | fetch data of user by id |  
 | GET | api/profile/users    | fetch data of all users in the database |  
+| GET | api/profile/filter/users?   | fetch data of all users in the database and filter by the first letter |  
 | POST | api/profile | create new user |  
 | PUT | api/profile | update current logged in users data by auth token |  
 | DELETE | api/profile | delete current logged in user by auth token  |  
 
-## API cURL documentation
-
-Create a new user
-curl -X POST "https://restfulapi-aqov.onrender.com/api/profile" \
-     -H "Content-Type: application/json" \
-     -d '{"name": "Elias", "password": "mypassword2025", "email": "elias@larsson.com"}'
-log in
-curl -X POST http://localhost:8080/api/login \
-     -H "Content-Type: application/json" \
-     -d '{"username": "Elias", "password": "mypassword2025" }'
-Get user
-curl -X GET "https://restfulapi-aqov.onrender.com/api/67e11bc35a26e1b4c64bd9e1" \
-     -H "Authorization: Bearer <Your_Access_Token>"
-Delete user
-usercurl -X DELETE "https://restfulapi-aqov.onrender.com/api/profile" \
-     -H "Authorization: Bearer <Your_Access_Token>"
-Update user
-curl -X PUT "https://restfulapi-aqov.onrender.com/api/profile" \
-     -H "Content-Type: application/json" \
-     -H "Authorization: Bearer <Your_Access_Token>" \
-     -d '{"username":"testuser1"}'
+## API cURL documentation examples
+### Create a user 
+ ```
+curl --request POST   --url 'https://restfulapi-aqov.onrender.com/api/profile?='   --header 'Content-Type: application/json'   --header 'User-Agent: insomnia/10.3.1'   --data '{ 
+    "email": "Desi1@Lasse.com",
+    "name": "Desi1",
+    "password": "banan1212" ,
+    "money": 122,
+        "ownedItems": []
+ }'
+```
+### Get user data by id 
+```
+curl --request GET \
+  --url https://restfulapi-aqov.onrender.com/api/profile/67e6c4a53b6051e1fe6a265a \
+  --header 'User-Agent: insomnia/10.3.1'
+```
+### Update user by auth token
+```
+curl --request PUT \
+  --url https://restfulapi-aqov.onrender.com/api/profile \
+  --header 'Authorization: Bearer <Access_Token>' \
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: insomnia/10.3.1' \
+  --data '{ 
+    "email": "Desi@Lasse.com",
+    "name": "Desi",
+    "password": "banan2121"
+ }'
+```
+### Delete user by auth token
+```
+curl --request DELETE \
+  --url https://restfulapi-aqov.onrender.com/api/profile \
+  --header 'Authorization: Bearer <Access_Token>' \
+  --header 'User-Agent: insomnia/10.3.1'
+```
+### Filter by first letter and fetch all data 
+```
+curl --request GET \
+  --url 'https://restfulapi-aqov.onrender.com/api/profile/filter/users?startingLetter=d' \
+  --header 'User-Agent: insomnia/10.3.1'
+```
