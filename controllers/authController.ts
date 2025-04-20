@@ -13,7 +13,7 @@ const login = async (req: Request, res: Response) => {
     }
 
     if (!(await bcrypt.compare(req.body.password, user.password))) {
-      res.status(401).json("Password is incorrect");
+      res.status(401).json("Password or email is incorrect");
       return;
     }
 

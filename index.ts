@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./db";
 import AuthController from "./controllers/authController";
-import authenticateToken from "./middleware/auth";
 import { UserRequest } from "./types";
 
 dotenv.config();
@@ -14,6 +13,13 @@ const app: Express = express();
 const PORT = process.env.PORT || 3001;
 connectDB();
 
+app.use(
+  cors({
+    origin: [process.env.CLIENT_URL!],
+    methods: ["GET, POST, PUT, DELETE"],
+  })
+);
+
 app.get("/", (req: UserRequest, res: Response) => {
   res.send({ message: "you are authenticated", user: req.user });
 });
@@ -21,12 +27,6 @@ app.get("/", (req: UserRequest, res: Response) => {
 app.use(express.json());
 app.use(itemRouter);
 app.use(userRouter);
-app.use(
-  cors({
-    origin: "https://restfulapi-aqov.onrender.com, http://localhost:3000",
-    methods: "GET, POST, PUT, DELETE",
-  })
-);
 
 app.post("/api/login", AuthController.login);
 
