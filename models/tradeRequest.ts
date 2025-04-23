@@ -3,8 +3,10 @@ import mongoose, { Schema } from "mongoose";
 const tradeRequestSchema = new mongoose.Schema(
   {
     id: Number,
-    requestItems: { type: [{ type: Schema.Types.ObjectId }], default: [] },
-    giveItems: { type: [{ type: Schema.Types.ObjectId }], default: [] }, 
+    requester_id: { type: Schema.Types.ObjectId, required: true },
+    recipient_id: { type: Schema.Types.ObjectId, required: true },
+    request_items: { type: [{ type: Schema.Types.ObjectId }], default: [] },
+    offer_items: { type: [{ type: Schema.Types.ObjectId }], default: [] }, 
   },
   {
     collection: "tradeRequest",
