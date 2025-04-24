@@ -34,6 +34,7 @@ const userTradeRequest = async (req: UserRequest, res: Response) => {
     
     recipient.tradeRequest.push(trade._id);
     res.json(trade);
+    await trade.save();
     await recipient.save();
   } catch (error) {}
 };
