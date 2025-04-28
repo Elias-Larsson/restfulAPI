@@ -14,9 +14,13 @@ const userTradeRequest = async (req: UserRequest, res: Response): Promise<void> 
       res.status(404).json({ message: "User not found" });
       return;
     }
-
+    
     if (!recipient) {
       res.status(404).json({ message: "Recipient not found" });
+      return;
+    }
+    if(recipient.tradeRequest.length >= 1) {
+      res.status(400).json({ message: "This user has the maximum amount of trade requests at a time" });
       return;
     }
 
