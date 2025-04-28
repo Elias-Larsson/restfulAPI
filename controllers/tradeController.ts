@@ -84,7 +84,7 @@ const userTradeChoice = async (req: UserRequest, res: Response) => {
       );
       recipient.tradeRequest = recipient.tradeRequest.filter(
         (item) => !item.equals(trade._id));
-        
+
       recipient.ownedItems.push(trade.offer_item);
       requester.ownedItems.push(trade.request_item);
 
@@ -103,6 +103,20 @@ const userTradeChoice = async (req: UserRequest, res: Response) => {
   }
 };
 
+const getTradeRequest = async (req: UserRequest, res: Response) => {  
+  try {
+    const trade = await tradeRequest.findById(req.params.id);
 
+    if (!trade) {
+      res.status(404).json({ message: "Trade request not found" });
+      return;
+    }
 
-export { userTradeRequest, userTradeChoice };
+    res.json(trade);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error", error });
+  }
+}
+
+export { userTradeRequest, userTradeChoice, getTradeRequest};
