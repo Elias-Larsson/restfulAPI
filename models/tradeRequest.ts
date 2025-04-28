@@ -5,8 +5,8 @@ const tradeRequestSchema = new mongoose.Schema(
     id: Number,
     requester_id: { type: Schema.Types.ObjectId, required: true },
     recipient_id: { type: Schema.Types.ObjectId, required: true },
-    request_item: { type: [{ type: Schema.Types.ObjectId }], default: [] }, 
-    offer_item: { type: [{ type: Schema.Types.ObjectId }], default: [] }, 
+    request_item: { type: Schema.Types.ObjectId, required: true },
+    offer_item: { type: Schema.Types.ObjectId, required: true },  
   },
   {
     collection: "tradeRequest",

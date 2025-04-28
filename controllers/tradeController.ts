@@ -9,7 +9,7 @@ const userTradeRequest = async (req: UserRequest, res: Response): Promise<void> 
   try {
     const requester = await User.findById(req.user._id);
     const recipient = await User.findById(req.body.recipient_id);
-    const items = await Item.find({ });
+
     if (!requester) {
       res.status(404).json({ message: "User not found" });
       return;
@@ -27,42 +27,82 @@ const userTradeRequest = async (req: UserRequest, res: Response): Promise<void> 
       offer_item: req.body.offer_item,
     });  
 
-    if (!trade || !trade.offer_item || !trade.request_item) {
-      res.status(400).json({message: "missing trade items"})
+    if (!requester.ownedItems.includes(req.body.offer_item)) {
+      res.status(400).json({ message: "You do not own the item you are offering" });
       return;
     }
 
-    
-    //control check users own items
-    const requesterOwnsOfferedItems = trade.offer_item.some( (item) => requester.ownedItems.includes(item) );
-    const recipientOwnsRequestedItems = trade.request_item.some( (item) => recipient.ownedItems.includes(item) );
-
-    if (!requesterOwnsOfferedItems || !recipientOwnsRequestedItems) {
-      res.status(400).json({message: "You do not own the items you are offering/requesting"});
+    if (!recipient.ownedItems.includes(req.body.request_item)) {
+      res.status(400).json({ message: "Recipient does not own the requested item" });
       return;
     }
-
-    
-    //control check if items are already owned by users 
-    const requesterAlreadyOwnsRequestedItems = trade.request_item.some( (item) => requester.ownedItems.includes(item) );
-    const recipientAlreadyOwnsOfferedItems = trade.offer_item.some( (item) => recipient.ownedItems.includes(item) );
-
-    if(requesterAlreadyOwnsRequestedItems || recipientAlreadyOwnsOfferedItems) {
-      res.status(400).json({message: "You cannot trade items you already own"});
-      return;
-    }
-
-    res.json({message: "Trade request sent", trade});
 
     recipient.tradeRequest.push(trade._id);
-    res.json(trade);
-
     await trade.save();
     await recipient.save();
+    res.json({ message: "Trade request sent", trade });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error", error });
+  }
+}
+
+const userTradeChoice = async (req: UserRequest, res: Response) => {
+  try {
+    const choice_value = req.body.choice_value;
+
+    if (!choice_value) {
+      res.status(404).json({ message: "Choice request not found" });
+      return;
+    }
+    const trade = await tradeRequest.findById(req.params.id);
+
+    if (!trade) {
+      res.status(404).json({ message: "Trade request not found"});
+      return;
+    }
+
+    const requester = await User.findById(trade.requester_id);
+    const recipient = await User.findById(trade.recipient_id);
+
+    if (!requester) {
+      res.status(404).json({ message: "Requester not found" });
+      return;
+    }
+
+    if (!recipient) {
+      res.status(404).json({ message: "Recipient not found" });
+      return;
+    }
+
+    if (choice_value) {
+      recipient.ownedItems = recipient.ownedItems.filter(
+        (item) => !item.equals(trade.request_item)
+      );
+      requester.ownedItems = requester.ownedItems.filter(
+        (item) => !item.equals(trade.offer_item)
+      );
+      recipient.tradeRequest = recipient.tradeRequest.filter(
+        (item) => !item.equals(trade._id));
+        
+      recipient.ownedItems.push(trade.offer_item);
+      requester.ownedItems.push(trade.request_item);
+
+      await recipient.save();
+      await requester.save();
+      await trade.deleteOne();
+      
+      res.json({ message: "Trade accepted and completed" });
+    } else {
+      await trade.deleteOne();
+      res.json({ message: "Trade rejected and deleted" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error", error });
   }
 };
 
-export { userTradeRequest };
+
+
+export { userTradeRequest, userTradeChoice };
