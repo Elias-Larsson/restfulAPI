@@ -56,7 +56,7 @@ const userTradeChoice = async (req: UserRequest, res: Response) => {
     const choice_value = req.body.choice_value;
 
     if (!choice_value) {
-      res.status(404).json({ message: "Choice request not found" });
+      res.status(404).json({ message: "No value from choice" });
       return;
     }
     const trade = await tradeRequest.findById(req.params.id);
@@ -99,7 +99,7 @@ const userTradeChoice = async (req: UserRequest, res: Response) => {
       res.json({ message: "Trade accepted and completed" });
     } else {
       await trade.deleteOne();
-      res.json({ message: "Trade rejected and deleted" });
+      res.json({ message: "Trade rejected" });
     }
   } catch (error) {
     console.error(error);
