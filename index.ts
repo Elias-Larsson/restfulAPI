@@ -15,20 +15,22 @@ const app: Express = express();
 const PORT = process.env.PORT || 3001;
 connectDB();
 
+app.use(express.json());
+
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    methods: "GET, POST, PUT, DELETE, OPTIONS",
+  })
+);
+app.use(itemRouter);
+app.use(userRouter);
+app.use(tradeRouter);
 app.get("/", (req: UserRequest, res: Response) => {
   res.send({ message: "you are authenticated", user: req.user });
 });
 
-app.use(express.json());
-app.use(itemRouter);
-app.use(userRouter);
-app.use(tradeRouter);
-app.use(
-  cors({
-    origin: "https://restfulapi-aqov.onrender.com, http://localhost:3000",
-    methods: "GET, POST, PUT, DELETE",
-  })
-);
+
 
 app.post("/api/login", AuthController.login);
 

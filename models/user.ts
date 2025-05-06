@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema(
     money: { type: Number, default: 500 },
     ownedItems: { type: [{ type: Schema.Types.ObjectId }], default: [] },
     tradeRequest: {type: [{ type: Schema.Types.ObjectId }], default: [] },
-
   },
   {
     collection: "users",
