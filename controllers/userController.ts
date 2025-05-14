@@ -88,12 +88,18 @@ const updateUser = async (req: UserRequest, res: Response) => {
   }
 };
 
-const deleteUser = async (req: Request, res: Response) => {
+const deleteUser = async (req: UserRequest, res: Response) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
+
+    if (!req.user) {
+      res.status(404).json({ message: "Could not find user" });
+      return;
+    }
+
+    const user = await User.findByIdAndDelete(req.user._id);
     
     if (!user) {
-      res.status(404).json({ message: "User not found" });
+      res.status(404).json({ message: "You must be logged in to delete current user" });
       return;
     }
 

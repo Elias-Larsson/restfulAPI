@@ -14,6 +14,6 @@ userRouter.get("/api/profile", getUsers);
 userRouter.get("/api/profile/:id", getUser);
 userRouter.post("/api/profile", createUser);
 userRouter.put("/api/profile", authenticateToken, updateUser);
-userRouter.delete("/api/profile/:id", authenticateToken, deleteUser);
+userRouter.delete("/api/profile", authenticateToken, deleteUser);
 
 export default userRouter;
