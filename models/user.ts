@@ -6,8 +6,9 @@ export const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     password: { type: String, required: true },
-    money: { type: Number, default: 500, required: true },
+    money: { type: Number, default: 500 },
     ownedItems: { type: [{ type: Schema.Types.ObjectId }], default: [] },
+    tradeRequest: {type: [{ type: Schema.Types.ObjectId }], default: [] },
   },
   {
     collection: "users",

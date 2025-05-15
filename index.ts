@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import userRouter from "./routes/userRoutes";
 import itemRouter from "./routes/itemRoutes";
+import tradeRouter from "./routes/tradeRoutes";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./db";
@@ -13,20 +14,21 @@ const app: Express = express();
 const PORT = process.env.PORT || 3001;
 connectDB();
 
+app.use(express.json());
+
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL!],
-    methods: ["GET, POST, PUT, DELETE"],
+    origin: process.env.CLIENT_URL,
+    methods: "GET, POST, PUT, DELETE, OPTIONS",
   })
 );
-
+app.use(itemRouter);
+app.use(userRouter);
+app.use(tradeRouter);
 app.get("/", (req: UserRequest, res: Response) => {
   res.send({ message: "you are authenticated", user: req.user });
 });
 
-app.use(express.json());
-app.use(itemRouter);
-app.use(userRouter);
 
 app.post("/api/login", AuthController.login);
 

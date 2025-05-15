@@ -34,12 +34,13 @@ const getUser = async (req: Request, res: Response) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      res.status(404).send().json({ message: "User not found" });
+      res.status(404).json({ message: "User not found" });
       return;
     }
     res.json(user);
   } catch (error) {
-    res.status(500).send(error);
+    console.error("Error fetching user:", error);
+    res.status(500).json({ message: "Error fetching user" });
   }
 };
 
@@ -82,36 +83,33 @@ const filterUsers = async (req: Request, res: Response) => {
 const updateUser = async (req: UserRequest, res: Response) => {
   try {
     if (!req.user) {
-      res.status(404).json({ message: "Could not find user" });
-      return;
-    }
-
-    const allowedUpdates = ["name", "email", "password"];
-
-    const updates = Object.keys(req.body);
-    console.log(updates);
-
-    const isValidOperation = updates.every((key) => allowedUpdates.includes(key));
-
-    if (!isValidOperation) {
-      console.log(updates)
-      res.status(400).json({ message: "User is only allowed to update name, email and password" });
+      res.status(400).json({ message: "User information is missing" });
       return;
     }
     
-    const user = await User.findByIdAndUpdate(req.user._id, req.body, {
-      new: true,
-    });
-
+    const user = await User.findById(req.user._id);
 
     if (!user) {
       res.status(404).json({ message: "You must be logged in to update user information" });
       return;
     }
 
-    const updatedUser = await User.findById(req.user._id);
+    if (req.body.name) {
+      user.name = req.body.name;
+    }
 
-    res.status(200).json({ message: "User updated", updatedUser });
+    if (req.body.email) {
+      user.email = req.body.email;
+    }
+
+    if (req.body.password) {
+      const salt = await bcrypt.genSalt();
+      user.password = await bcrypt.hash(req.body.password, salt);
+    }
+    
+    
+    await user.save()
+    res.status(200).json({ message: "User updated", updatedUser: user });
   } catch (error) {
     res.status(500).send(error);
   }
@@ -124,7 +122,6 @@ const deleteUser = async (req: UserRequest, res: Response) => {
       res.status(404).json({ message: "Could not find user" });
       return;
     }
-    
     const user = await User.findByIdAndDelete(req.user._id);
     
     if (!user) {
