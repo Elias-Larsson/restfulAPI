@@ -107,5 +107,25 @@ const deleteUser = async (req: UserRequest, res: Response) => {
     res.status(500).send(error);
     return;
   }
+  
+  const getCurrentUser = async (req: UserRequest, res: Response) => {
+  try {
+    if (!req.user) {
+      res.status(404).json({ message: "Could not find user" });
+      return;
+    }
+    const user = await User.findById(req.user._id);
+    
+    if (!user) {
+      res.status(404).json({ message: "You must be logged in to get current user" });
+      return;
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).send(error);
+    return;
+  }
+}
 };
 export { getUser, getUsers, createUser, updateUser, deleteUser };
