@@ -107,7 +107,8 @@ const deleteUser = async (req: UserRequest, res: Response) => {
     res.status(500).send(error);
     return;
   }
-  
+}
+
   const getCurrentUser = async (req: UserRequest, res: Response) => {
   try {
     if (!req.user) {
@@ -127,5 +128,6 @@ const deleteUser = async (req: UserRequest, res: Response) => {
     return;
   }
 }
-};
-export { getUser, getUsers, createUser, updateUser, deleteUser };
+
+
+export { getUser, getUsers, createUser, updateUser, deleteUser, getCurrentUser };
