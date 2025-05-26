@@ -61,16 +61,14 @@ const getUsers = async (req: Request, res: Response) => {
 
 const filterUsers = async (req: Request, res: Response) => {
   try {
-    const { startingLetter } = req.query;
+    const { searchQuery } = req.query;
 
-    if (!startingLetter || typeof startingLetter !== "string") {
+    if (!searchQuery || typeof searchQuery !== "string") {
       res.status(400).json({ message: "Missing starting letter or invalid starting letter" });
       return;
     }
 
-    const regexLetter = new RegExp(`^${startingLetter}`, 'i');
-
-    const users = await User.find({ name: regexLetter });
+    const users = await User.find({ name: { $regex: `^${searchQuery}`, $options: "i" } });
 
     res.status(200).json(users);
   } catch (error) {
