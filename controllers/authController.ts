@@ -3,27 +3,32 @@ import User from "../models/user";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-const login = async (req: Request, res: Response) => {
+const login = async (req: Request, res: Response): Promise<void> => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const { email, password } = req.body;  // Destructured for clarity
+
+    const user = await User.findOne({ email });
 
     if (!user) {
-      res.status(404).json("User not found");
+      res.status(401).json({ message: "User not found" });  // Use 401 for all auth errors (security)
       return;
     }
 
-    if (!(await bcrypt.compare(req.body.password, user.password))) {
-      res.status(401).json("Password or email is incorrect");
+    if (!(await bcrypt.compare(password, user.password))) {
+      res.status(401).json({ message: "Password or email is incorrect" });
       return;
     }
 
     const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET!);
 
-    res.json({ accessToken: accessToken });
+    res.status(200).json({ 
+      message: "Login successful",  // Optional: Add for consistency
+      accessToken 
+    });
   } catch (error) {
-    console.log(error);
+    console.error('Login error:', error);  // Better logging
 
-    res.status(500).json("Error logging in");
+    res.status(500).json({ message: "Error logging in" });
   }
 };
 
