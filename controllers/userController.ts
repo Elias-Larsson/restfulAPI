@@ -30,9 +30,9 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getUser = async (req: Request, res: Response) => {
+const getUser = async (req: UserRequest, res: Response) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.user?.id);
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
